@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Language High Pitch Echo</title>
+</head>
+
+<body>
+    <h1>Say Something!</h1>
+    <label for="language-select">Choose a language:</label>
+    <select id="language-select">
+        <option value="en-US">English (US)</option>
+        <option value="es-ES">Spanish (Spain)</option>
+        <option value="fr-FR">French</option>
+        <option value="de-DE">German</option>
+        <option value="hi-IN">Hindi</option>
+        <option value="zh-CN">Chinese (Mandarin)</option>
+        <option value="ar-SA">Arabic</option> <!-- Added Arabic -->
+    </select>
+    <button id="start-btn">Start Speaking</button>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const languageSelect = document.getElementById('language-select');
+
+        const recognition = new(window.SpeechRecognition || window.webkitSpeechRecognition)();
+        const synth = window.speechSynthesis;
+
+        recognition.onresult = function(event) {
+            const userSpeech = event.results[0][0].transcript;
+
+            // Speak it back with high pitch
+            const utterance = new SpeechSynthesisUtterance(userSpeech);
+            utterance.lang = languageSelect.value; // Set the selected language for synthesis
+            utterance.pitch = 2; // Higher pitch
+            utterance.rate = 1; // Normal speed
+            synth.speak(utterance);
+        };
+
+        startBtn.addEventListener('click', () => {
+            recognition.lang = languageSelect.value; // Set the selected language for recognition
+            recognition.start();
+        });
+        startBtn.addEventListener('click', () => {
+            recognition.lang = languageSelect.value; // Set recognition language
+            recognition.start();
+        });
+
+        recognition.onresult = function(event) {
+            const userSpeech = event.results[0][0].transcript;
+
+            // Get available voices
+            const availableVoices = synth.getVoices();
+            const arabicVoice = availableVoices.find(voice => voice.lang === languageSelect.value);
+
+            // Set up speech synthesis
+            const utterance = new SpeechSynthesisUtterance(userSpeech);
+            utterance.lang = languageSelect.value; // Set language
+            utterance.pitch = 3; // High pitch
+            utterance.rate = 1; // Normal speed
+
+            // Use Arabic voice if available
+            if (arabicVoice) {
+                utterance.voice = arabicVoice;
+            } else {
+                console.warn("Arabic voice not available, using default voice.");
+            }
+
+            synth.speak(utterance);
+        };
+    </script>
+</body>
+
+<style>
+    /* Global Styles */
+    
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+    /* Heading Style */
+    
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        color: #fff;
+    }
+    /* Label Style */
+    
+    label {
+        font-size: 1.2rem;
+        margin-right: 10px;
+        color: #fff;
+    }
+    /* Select Dropdown Style */
+    
+    select {
+        font-size: 1rem;
+        padding: 0.5rem;
+        border-radius: 5px;
+        border: none;
+        margin-bottom: 1.5rem;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+    /* Button Style */
+    
+    button {
+        background-color: #ff5722;
+        color: #fff;
+        border: none;
+        padding: 0.7rem 1.5rem;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    /* Button Hover Effect */
+    
+    button:hover {
+        background-color: #e64a19;
+    }
+</style>
+
+</html>
